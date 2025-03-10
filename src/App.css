@@ -1,1 +1,5 @@
 @import "tailwindcss";
+
+.react-top-loading-bar {
+  z-index: 1000; /* Make sure it's on top */
+}

@@ -9,6 +9,7 @@ import {
   FaUser,
   FaSignOutAlt,
   FaBars,
+  FaTimes,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
@@ -57,53 +58,64 @@ const Sidebar = () => {
     setIsOpen(!isOpen);
   };
 
+  const handleLinkClick = () => {
+    if (window.innerWidth < 768) {
+      setIsOpen(false);
+    }
+  };
+
   return (
     <div>
-      {/* Sidebar Toggle Button for Small Screens */}
-      <div className="md:hidden p-4 bg-black text-white flex items-center justify-between gap-3">
+      {/* Toggle Button for Small Screens */}
+      <div className="md:hidden p-4 bg-black text-white flex items-center justify-between fixed top-0 left-0 right-0 z-10">
         <button onClick={toggleSidebar}>
-          <FaBars size={24} />
+          {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
         </button>
-        <Link to="/">
-          <p className="text-xl font-bold ">Task Manager</p>
+        <Link to="/" onClick={handleLinkClick}>
+          <p className="text-xl font-bold">Task Manager</p>
         </Link>
       </div>
 
       {/* Sidebar */}
       <div
-        className={`h-screen w-64 bg-black text-white flex flex-col justify-between shadow-lg transform ${
+        className={`md:min-h-screen w-64 pb-8 bg-black text-white flex flex-col flex-1 overflow-y-auto" shadow-lg transform ${
           isOpen ? "translate-x-0" : "-translate-x-full"
-        } md:translate-x-0 transition-transform duration-300 ease-in-out fixed md:static z-50`}
+        } md:translate-x-0 transition-transform duration-300 ease-in-out fixed top-0 z-10`}
       >
-        {/* Top Section */}
-        <div>
-          <Link to="/">
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto">
+          <Link to="/" onClick={handleLinkClick}>
             <h1 className="text-2xl font-bold text-center py-6 border-b border-gray-700 hidden md:block">
               Task Manager
             </h1>
           </Link>
           <ul className="mt-4">
             {navigationLinks.map((link, index) => (
-              <Link to={link.href} key={index}>
-                <li
-                  key={index}
-                  className="p-4 hover:bg-gray-800 cursor-pointer flex items-center gap-3"
+              <li key={index} className="p-4 hover:bg-gray-800 cursor-pointer">
+                <Link
+                  to={link.href}
+                  onClick={handleLinkClick}
+                  className="flex items-center gap-3"
                 >
                   {link.icon}
                   {link.name}
-                </li>
-              </Link>
+                </Link>
+              </li>
             ))}
           </ul>
         </div>
 
-        {/* Bottom Section */}
-        <Link to="/login">
-          <div className="p-4 hover:bg-gray-800 cursor-pointer flex items-center gap-3">
+        {/* Logout Section */}
+        <div className="p-4 hover:bg-gray-800 cursor-pointer">
+          <Link
+            to="/login"
+            className="flex items-center gap-3"
+            onClick={handleLinkClick}
+          >
             <FaSignOutAlt />
             Logout
-          </div>
-        </Link>
+          </Link>
+        </div>
       </div>
     </div>
   );
